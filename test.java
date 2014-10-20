@@ -1,9 +1,11 @@
 package com.paragon.pdf.main;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -11,18 +13,6 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.util.PDFTextStripperByArea;
 import org.apache.commons.lang.StringEscapeUtils;
-
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.FilteredTextRenderListener;
-import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy;
-//import com.itextpdf.text.pdf.parser.PdfTextExtractor;
-import com.itextpdf.text.pdf.parser.RegionTextRenderFilter;
-import com.itextpdf.text.pdf.parser.RenderFilter;
-import com.itextpdf.text.pdf.parser.TextExtractionStrategy;
-
-import java.io.IOException;
 
 
 public class PdfTextExtractor {
@@ -32,7 +22,7 @@ public class PdfTextExtractor {
 	static String in_imgPath="";
 	public static String outputdir="";
 	static String cropPAth="";
-	public static  ArrayList<ImageCoordinates> lists =new ArrayList<ImageCoordinates>();
+	public  ArrayList<ImageCoordinates> lists =new ArrayList<ImageCoordinates>();
 	//private PDFImageCoordinates PDFImageCoordinates;
 	 static String texts;
 
@@ -51,16 +41,8 @@ public class PdfTextExtractor {
 		double h = Double.parseDouble(request.getParameter("h"));
 		double xend= x+w;
 		double yend = y+h;
-		/*int x_font = Integer.parseInt(request.getParameter("x"));
-		int y_font = Integer.parseInt(request.getParameter("y"));
-		int w_font =  Integer.parseInt(request.getParameter("w"));
-		int h_font=Integer.parseInt(request.getParameter("h"));
-		int  xend_font= (int) (x_font+w_font);
-		int yend_font = y_font+h_font;
-        System.out.println("xend ="+xend_font);
-		System.out.println("yend="+xend_font);*/
-
-		imagename = request.getParameter("imagename");
+	    String text = request.getParameter("text");
+	    imagename = request.getParameter("imagename");
 	    objCoords.setImagename(imagename);
 	    try {
 			System.out.println("imagename is"+imagename);
@@ -100,6 +82,7 @@ public class PdfTextExtractor {
 
 		    }
 
+
 		    PDFTextStripperByArea stripper = new PDFTextStripperByArea();
 			Rectangle2D region = new Rectangle2D.Double(x, y, w, h);
 			String regionName = "region";
@@ -109,7 +92,7 @@ public class PdfTextExtractor {
 			stripper.extractRegions(pdpage);
 
 			String sStrippedText = stripper.getTextForRegion(regionName);
-            
+
 			String sStrippedText_Copy =stripper.getTextForRegion(regionName);
 
 
@@ -288,4 +271,3 @@ public static String getTextFromCoords(Coords objCoords)
 		return sStrippedText;
 	}
 }
-
